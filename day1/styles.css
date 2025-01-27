@@ -1,0 +1,153 @@
+:root {
+  --blue: rgb(66, 139, 202);
+  --blue-light: rgba(66, 139, 202, 0.7);
+  --green: rgb(92, 184, 92);
+  --frame: #e3e3e3;
+  --text: #333;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+html {
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 860px;
+  /* border: 1px red solid; */
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 80%;
+  min-width: 320px;
+  padding: 2rem 3rem;
+  border: 1px var(--frame) solid;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  /* border: 1px green solid; */
+}
+
+.wrapper h1 {
+  color: var(--text);
+  margin-bottom: 10px;
+  font-weight: lighter;
+  text-align: center;
+  /* border: 1px red solid; */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  /* border: 1px red solid; */
+}
+
+form input {
+  outline: none;
+  border: 1.5px solid var(--frame);
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 7px;
+}
+
+form input:focus {
+  border: 1px solid var(--blue-light);
+  box-shadow: 0px 0px 10px 0.2px var(--blue-light);
+}
+
+.horizontalGroup {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+  /* border: 1px green solid; */
+}
+
+.horizontalGroup input {
+  flex: 1;
+}
+
+.horizontalGroup .condition {
+  flex: 0.8;
+  text-align: left;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: space-between;
+
+  /* border: 1px green solid; */
+}
+
+button {
+  font-size: 1rem;
+  padding: 10px 0;
+  border-radius: 7px;
+  outline: none;
+  border: none;
+  width: 90%;
+  color: #fff;
+  cursor: pointer;
+}
+
+#signup {
+  background-color: var(--blue);
+}
+
+#signin {
+  background-color: var(--green);
+}
+
+#signup:hover {
+  opacity: 0.8;
+}
+
+#signin:hover {
+  opacity: 0.8;
+}
+
+.terms {
+  margin-bottom: 0.2rem;
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+}
+
+.agree input {
+  height: 1em;
+  width: 1em;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.condition {
+  color: var(--text);
+}
+
+.condition mark {
+  background-color: var(--blue);
+  color: #fff;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.8em;
+}
+
+.condition a {
+  color: var(--blue);
+  text-decoration: none;
+}
