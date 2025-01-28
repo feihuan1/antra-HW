@@ -9,17 +9,10 @@
 // lottery().  //Sorry you missed the chance (edited) 
 
 
-let chance = 5 
-function lottery(){
-    chance--
-    return (() => {
-        if(chance >= 0) {
-            console.log("Congrats you earn the chance!")
-        } else {
-            console.log("Sorry you missed the chance")
-        }
-    })()
-}
+const lottery = (() => {
+    let count = 0;
+    return () => count++ < 5 ? console.log("Congrats you earn the chance!") : console.log("Sorry you missed the chance");
+  })();
 
 lottery()   //Congrats you earn the chance!
 lottery()   //Congrats you earn the chance!
