@@ -22,6 +22,7 @@ const GameView = {
   pop: document.querySelector(".pop"),
   enemy: document.querySelector("#enemy"),
   player: document.getElementById("player"),
+  start:document.getElementById("start"),
   
   updateUI(e) {
     document.getElementById("level").innerText = GameModel.level;
@@ -66,7 +67,9 @@ const GameView = {
 const GameController = {
   startGame() {
     GameView.music.play();
+    GameView.start.remove();
     GameController.init();
+
   },
 
   init() {
