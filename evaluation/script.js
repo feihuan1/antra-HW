@@ -3,12 +3,12 @@ const GameModel = {
   isGameOver: false,
   score: 0,
   level: 1,
-  updateScore(points) {
+  updateScore: function(points) {
     if (this.isGameOver) return;
     this.score += points;
     this.level = Math.floor(this.score / 100 + 1);
   },
-  resetGame() {
+  resetGame: function() {
     this.isGameOver = false;
     this.score = 0;
     this.level = 1;
@@ -24,36 +24,34 @@ const GameView = {
   player: document.getElementById("player"),
   start:document.getElementById("start"),
   
-  updateUI(e) {
+  updateUI: function(e) {
     document.getElementById("level").innerText = GameModel.level;
     document.getElementById("score").innerText = GameModel.score;
     e.target.style.transform = "scale(1.5 , 0.3)";
     e.target.style.transformOrigin = "bottom";
-
   },
-  playSound(path, vol) {
+  playSound: function(path, vol) {
     let sound = new Audio(path);
     sound.volume = vol;
     sound.play();
   },
-  updateCursor(down) {
+  updateCursor: function(down) {
     this.board.style.cursor = `url('./image/${down ? "hammerdown" : "hammerup"}.png'), auto`;
   },
-  showGameOver() {
+  showGameOver: function() {
     this.pop.classList.remove("hidden");
     this.finalScore.innerText = GameModel.score;
     this.finalScore.style.color = GameModel.score < 100 ? "red" : "green";
     this.music.pause();
   },
-  renderTile(id) {
+  renderTile: function(id) {
     let tile = document.createElement("div");
     tile.id = id;
     this.board.appendChild(tile);
   },
-  renderEntity(type, tile) {
+  renderEntity: function(type, tile) {
     let entity = document.createElement("img");
     entity.id = type;
-    // entity.src = type === "enemy" ? "./image/feihuan1.png" : "./image/vita.png";
     if(type === "enemy"){
       entity.src = GameView.enemy.files[0] ? URL.createObjectURL(enemy.files[0]) : "./image/feihuan1.png"
     } else {
@@ -65,21 +63,20 @@ const GameView = {
 };
 
 const GameController = {
-  startGame() {
+  startGame: function() {
     GameView.music.play();
     GameView.start.remove();
     GameController.init();
 
   },
-
-  init() {
-    GameView.music.play();
+  init: function() {
     for (let i = 0; i < 16; i++) {
       GameView.renderTile(i.toString());
     }
+    document.getElementById("board").addEventListener("click", this.handleTileClick);
     this.startGameLoops();
   },
-  handleTileClick(e) {
+  handleTileClick: function(e) {
     if (GameModel.isGameOver) return;
     GameView.updateCursor(true);
     setTimeout(() => GameView.updateCursor(false), 50);
@@ -103,7 +100,7 @@ const GameController = {
       GameView.playSound("./audio/hammerpipe.mp3", 0.5);
     }
   },
-  spawnEntity(type) {
+  spawnEntity: function(type) {
     if (GameModel.isGameOver) return;
     let tile = document.getElementById(Math.floor(Math.random() * 16).toString());
     if (tile.children.length === 0) {
@@ -117,9 +114,9 @@ const GameController = {
       }, 2500 / GameModel.level);
     }
   },
-  startGameLoops() {
+  startGameLoops: function() {
     setInterval(() => this.spawnEntity("enemy"), 1500 / GameModel.level);
-    setInterval(() => this.spawnEntity("player"), 3000 / GameModel.level);
+    setInterval(() => this.spawnEntity("player"), 1800 / GameModel.level);
     setInterval(() => this.spawnEntity("enemy"), 2100 / GameModel.level);
   }
 };
@@ -128,7 +125,3 @@ window.onload = () => {
   document.body.addEventListener("click", GameController.startGame, { once: true });
 };
 
-// window.onload = () => GameController.init();
-
-
-document.getElementById("board").addEventListener("click", GameController.handleTileClick);
