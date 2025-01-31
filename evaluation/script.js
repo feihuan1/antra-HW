@@ -1,138 +1,131 @@
-let feihuanPipe;
-let vitaPipe;
-let isGameOver = false;
-let score = 0;
-let level = 1;
 
-const music = document.querySelector("audio");
-const board = document.getElementById("board");
-const enemy = document.querySelector("#enemy");
-const player = document.getElementById("player");
-const final = document.querySelector(".final");
-const pop = document.querySelector(".pop");
-
-
-window.onload = function () {
-  setGame();
+const GameModel = {
+  isGameOver: false,
+  score: 0,
+  level: 1,
+  updateScore(points) {
+    if (this.isGameOver) return;
+    this.score += points;
+    this.level = Math.floor(this.score / 100 + 1);
+  },
+  resetGame() {
+    this.isGameOver = false;
+    this.score = 0;
+    this.level = 1;
+  }
 };
 
-function playSound(path, vol) {
-  let sound = new Audio();
-  sound.src = path;
-  sound.volume = vol;
-  sound.play();
-}
+const GameView = {
+  board: document.getElementById("board"),
+  music: document.querySelector("audio"),
+  finalScore: document.querySelector(".final"),
+  pop: document.querySelector(".pop"),
+  enemy: document.querySelector("#enemy"),
+  player: document.getElementById("player"),
+  
+  updateUI(e) {
+    document.getElementById("level").innerText = GameModel.level;
+    document.getElementById("score").innerText = GameModel.score;
+    e.target.style.transform = "scale(1.5 , 0.3)";
+    e.target.style.transformOrigin = "bottom";
 
-
-
-
-function setGame() {
-  music.play()
-  for (let i = 0; i < 16; i++) {
+  },
+  playSound(path, vol) {
+    let sound = new Audio(path);
+    sound.volume = vol;
+    sound.play();
+  },
+  updateCursor(down) {
+    this.board.style.cursor = `url('./image/${down ? "hammerdown" : "hammerup"}.png'), auto`;
+  },
+  showGameOver() {
+    this.pop.classList.remove("hidden");
+    this.finalScore.innerText = GameModel.score;
+    this.finalScore.style.color = GameModel.score < 100 ? "red" : "green";
+    this.music.pause();
+  },
+  renderTile(id) {
     let tile = document.createElement("div");
+    tile.id = id;
+    this.board.appendChild(tile);
+  },
+  renderEntity(type, tile) {
+    let entity = document.createElement("img");
+    entity.id = type;
+    // entity.src = type === "enemy" ? "./image/feihuan1.png" : "./image/vita.png";
+    if(type === "enemy"){
+      entity.src = GameView.enemy.files[0] ? URL.createObjectURL(enemy.files[0]) : "./image/feihuan1.png"
+    } else {
+      entity.src = GameView.player.files[0] ? URL.createObjectURL(player.files[0]) : "./image/vita.png"
+    }
+    entity.draggable = false;
+    tile.appendChild(entity);
+  }
+};
 
-    tile.id = i.toString();
+const GameController = {
+  startGame() {
+    GameView.music.play();
+    GameController.init();
+  },
 
-    tile.addEventListener("click", (e) => {
-      if (isGameOver) {
-        return;
-      }
-      board.style.cursor = "url('./image/hammerdown.png'), auto";
+  init() {
+    GameView.music.play();
+    for (let i = 0; i < 16; i++) {
+      GameView.renderTile(i.toString());
+    }
+    this.startGameLoops();
+  },
+  handleTileClick(e) {
+    if (GameModel.isGameOver) return;
+    GameView.updateCursor(true);
+    setTimeout(() => GameView.updateCursor(false), 50);
+    
+    if (e.target.id === "enemy") {
+      GameView.playSound("./audio/feihuanhit.mp3", 0.5);
+      GameView.playSound("./audio/hammerhead.mp3", 0.5);
+      GameModel.updateScore(10);
+      GameView.updateUI(e);
+      setTimeout(()=>{
+        e.target.remove();
+      }, 1000)
+
+    } else if (e.target.id === "player") {
+      GameView.playSound("./audio/vitahit.mp3", 0.5);
+      GameView.playSound("./audio/hammerhead.mp3", 0.5);
+      GameModel.isGameOver = true;
+      GameView.showGameOver();
+      GameView.updateUI(e);
+    } else {
+      GameView.playSound("./audio/hammerpipe.mp3", 0.5);
+    }
+  },
+  spawnEntity(type) {
+    if (GameModel.isGameOver) return;
+    let tile = document.getElementById(Math.floor(Math.random() * 16).toString());
+    if (tile.children.length === 0) {
+      GameView.renderEntity(type, tile);
+      GameView.playSound("./audio/pop.mp3", 0.2);
       setTimeout(() => {
-        board.style.cursor = "url('./image/hammerup.png'), auto";
-      }, 50);
-      if (e.target.id === "enemy") {
-        playSound("./audio/feihuanhit.mp3", 0.5);
-        playSound("./audio/hammerhead.mp3", 0.5);
-        score += 10;
-        level = Math.floor(score / 100 + 1);
-        document.getElementById("level").innerText = level.toString();
-        document.getElementById("score").innerText = score.toString();
-        e.target.style.transform = "scale(1.5 , 0.3)";
-        e.target.style.transformOrigin = "bottom";
-        e.target.id = "";
-      } else if (e.target.id === "player") {
-        playSound("./audio/vitahit.mp3", 0.5);
-        playSound("./audio/hammerhead.mp3", 0.5);
-        pop.classList.remove("hidden");
-        final.innerText = score.toString();
-        score < 100
-          ? (final.style.color = "red")
-          : (final.style.color = "green");
-        e.target.style.transform = "scale(1.5 , 0.3)";
-        e.target.style.transformOrigin = "bottom";
-        isGameOver = true;
-        music.pause();
-      } else {
-        playSound("./audio/hammerpipe.mp3", 0.5);
-      }
-    });
-    board.appendChild(tile);
-  }
-  setInterval(setFeihuan, 3000 / level);
-  setInterval(setVita, 4000 / level);
-  setInterval(setFeihuan, 2300 / level);
-  setInterval(setVita, 3200 / level);
-}
-
-function getRandomTile() {
-  let num = Math.floor(Math.random() * 16);
-  return num.toString();
-}
-
-function setFeihuan() {
-  if (isGameOver) {
-    return;
-  }
-  let feihuan = document.createElement("img");
-  feihuan.id = "enemy";
-  if (enemy.files[0]) {
-    feihuan.src = URL.createObjectURL(enemy.files[0]);
-  } else {
-    feihuan.src = "./image/feihuan1.png";
-  }
-  feihuan.draggable = false;
-
-  let num = getRandomTile();
-
-  feihuanPipe = document.getElementById(num);
-  if (feihuanPipe.children.length === 0) {
-    feihuanPipe.appendChild(feihuan);
-    playSound("./audio/pop.mp3", 0.2);
-  }
-  setTimeout(() => {
-    if (!isGameOver) {
-      feihuan.remove();
-      playSound("./audio/out.mp3", 0.2);
+        if (!GameModel.isGameOver) {
+          tile.innerHTML = "";
+          GameView.playSound("./audio/out.mp3", 0.2);
+        }
+      }, 2500 / GameModel.level);
     }
-  }, 2500 / level);
-}
-
-function setVita() {
-  if (isGameOver) {
-    return;
+  },
+  startGameLoops() {
+    setInterval(() => this.spawnEntity("enemy"), 1500 / GameModel.level);
+    setInterval(() => this.spawnEntity("player"), 3000 / GameModel.level);
+    setInterval(() => this.spawnEntity("enemy"), 2100 / GameModel.level);
   }
+};
 
-  let vita = document.createElement("img");
-  vita.id = "player";
-  if (player.files[0]) {
-    vita.src = URL.createObjectURL(player.files[0]);
-  } else {
-    vita.src = "./image/vita.png";
-  }
-  vita.draggable = false;
-  let num = getRandomTile();
+window.onload = () => {
+  document.body.addEventListener("click", GameController.startGame, { once: true });
+};
 
-  vitaPipe = document.getElementById(num);
-  if (vitaPipe.children.length === 0) {
-    vitaPipe.appendChild(vita);
-    playSound("./audio/pop.mp3", 0.2);
-  }
+// window.onload = () => GameController.init();
 
-  setTimeout(() => {
-    if (!isGameOver) {
-      vita.remove();
-      playSound("./audio/out.mp3", 0.2);
-    }
-  }, 2500 / level);
-}
+
+document.getElementById("board").addEventListener("click", GameController.handleTileClick);
