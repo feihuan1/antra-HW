@@ -7,6 +7,7 @@ const GameModel = {
     if (this.isGameOver) return;
     this.score += points;
     this.level = Math.floor(this.score / 100 + 1);
+    this.time += points / 10
   },
   resetGame: function () {
     this.isGameOver = false;
