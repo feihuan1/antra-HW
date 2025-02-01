@@ -141,14 +141,13 @@ const GameController = {
   },
   startGameLoops: function () {
     setInterval(() => this.spawnEntity("enemy"), 1000 / GameModel.level);
-    setInterval(() => this.spawnEntity("player"), 1800 / GameModel.level);
-    setInterval(() => this.spawnEntity("player"), 2100 / GameModel.level);
+    setInterval(() => this.spawnEntity("player"), 1600 / GameModel.level);
     setInterval(() => this.spawnEntity("enemy"), 2100 / GameModel.level);
   },
 };
 
 window.onload = () => {
-  document.body.addEventListener("click", GameController.startGame, {
+  GameView.board.addEventListener("click", GameController.startGame, {
     once: true,
   });
 };
