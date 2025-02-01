@@ -137,13 +137,13 @@ const GameController = {
           tile.innerHTML = "";
           GameView.playSound("./audio/out.mp3", 0.2);
         }
-      }, Math.max(2500 / GameModel.level, 1000));
+      }, Math.max(2000 / GameModel.level, 600));
     }
   },
   startGameLoops: function () {
     setInterval(() => this.spawnEntity("enemy"), 1000 / GameModel.level);
     setInterval(() => this.spawnEntity("player"), 1600 / GameModel.level);
-    setInterval(() => this.spawnEntity("enemy"), 2100 / GameModel.level);
+    setInterval(() => this.spawnEntity("enemy"), Math.max(2000 / GameModel.level, 600));
   },
 };
 
