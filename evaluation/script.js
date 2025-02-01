@@ -85,12 +85,12 @@ const GameController = {
       GameView.renderTile(i.toString());
     }
     let timerInterval = setInterval(() => {
-      if (GameModel.time <= 1) {
+      if (GameModel.time <= 0) {
         GameModel.isGameOver = true;
         clearInterval(timerInterval);
         GameView.showGameOver();
       }
-      GameModel.time--;
+      !GameModel.isGameOver && GameModel.time--;
       GameView.updateUI();
     }, 1000);
 
