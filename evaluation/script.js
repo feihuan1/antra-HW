@@ -1,8 +1,12 @@
+const startingTime = 30
+const startinglevel = 1
+const startingScore = 0
+
 const GameModel = {
   isGameOver: false,
-  score: 0,
-  level: 1,
-  time: 30,
+  score: startingScore,
+  level: startinglevel,
+  time: startingTime,
   updateScore: function (points) {
     if (this.isGameOver) return;
     this.score += points;
