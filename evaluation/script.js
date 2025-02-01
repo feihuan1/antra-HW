@@ -57,6 +57,7 @@ const GameView = {
   },
   renderEntity: function (type, tile) {
     let entity = document.createElement("img");
+    entity.className = type;
     entity.id = type;
     if (type === "enemy") {
       entity.src = GameView.enemy.files[0]
@@ -125,7 +126,9 @@ const GameController = {
     let tile = document.getElementById(
       Math.floor(Math.random() * 16).toString()
     );
-    if (tile.children.length === 0) {
+    let enemyCount = document.querySelectorAll(".enemy").length
+
+    if (tile.children.length === 0 && enemyCount <= 3) {
       GameView.renderEntity(type, tile);
       GameView.playSound("./audio/pop.mp3", 0.2);
       setTimeout(() => {
@@ -133,12 +136,13 @@ const GameController = {
           tile.innerHTML = "";
           GameView.playSound("./audio/out.mp3", 0.2);
         }
-      }, 2500 / GameModel.level);
+      }, Math.max(2500 / GameModel.level, 1000));
     }
   },
   startGameLoops: function () {
     setInterval(() => this.spawnEntity("enemy"), 1000 / GameModel.level);
     setInterval(() => this.spawnEntity("player"), 1800 / GameModel.level);
+    setInterval(() => this.spawnEntity("player"), 2100 / GameModel.level);
     setInterval(() => this.spawnEntity("enemy"), 2100 / GameModel.level);
   },
 };
