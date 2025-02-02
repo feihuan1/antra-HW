@@ -1,12 +1,8 @@
-const startingTime = 30
-const startinglevel = 1
-const startingScore = 0
-
 const GameModel = {
   isGameOver: false,
-  score: startingScore,
-  level: startinglevel,
-  time: startingTime,
+  score: 0,
+  level: 1,
+  time: 30,
   updateScore: function (points) {
     if (this.isGameOver) return;
     this.score += points;
@@ -85,7 +81,7 @@ const GameController = {
     GameController.init();
   },
   init: function () {
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 12; i++) {
       GameView.renderTile(i.toString());
     }
     let timerInterval = setInterval(() => {
@@ -113,9 +109,7 @@ const GameController = {
       GameView.playSound("./audio/hammerhead.mp3", 0.5);
       GameModel.updateScore(10);
       GameView.updateUI(e);
-      setTimeout(() => {
-        e.target.remove();
-      }, 1000);
+ 
     } else if (e.target.id === "player") {
       GameView.playSound("./audio/vitahit.mp3", 0.5);
       GameView.playSound("./audio/hammerhead.mp3", 0.5);
@@ -129,7 +123,7 @@ const GameController = {
   spawnEntity: function (type) {
     if (GameModel.isGameOver) return;
     let tile = document.getElementById(
-      Math.floor(Math.random() * 16).toString()
+      Math.floor(Math.random() * 12).toString()
     );
     let enemyCount = document.querySelectorAll(".enemy").length
 
@@ -141,13 +135,13 @@ const GameController = {
           tile.innerHTML = "";
           GameView.playSound("./audio/out.mp3", 0.2);
         }
-      }, Math.max(2000 / GameModel.level, 600));
+      }, Math.max(2000 - (GameModel.level * 100)));
     }
   },
   startGameLoops: function () {
-    setInterval(() => this.spawnEntity("enemy"), 1000 / GameModel.level);
-    setInterval(() => this.spawnEntity("player"), 1600 / GameModel.level);
-    setInterval(() => this.spawnEntity("enemy"), Math.max(2000 / GameModel.level, 600));
+    setInterval(() => this.spawnEntity("enemy"), 1000 - (GameModel.level * 100));
+    setInterval(() => this.spawnEntity("player"), 1600 - (GameModel.level * 100));
+    setInterval(() => this.spawnEntity("enemy"), Math.max(2000 - (GameModel.level * 100)));
   },
 };
 
