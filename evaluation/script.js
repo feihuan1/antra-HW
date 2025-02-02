@@ -86,6 +86,7 @@ const GameController = {
     }
     let timerInterval = setInterval(() => {
       if (GameModel.time <= 0) {
+        GameView.playSound("./audio/youlose.mp3", 0.2);
         GameModel.isGameOver = true;
         clearInterval(timerInterval);
         GameView.showGameOver();
