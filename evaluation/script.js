@@ -17,7 +17,9 @@ const GameModel = {
   },
 };
 
+
 const GameView = {
+
   board: document.getElementById("board"),
   music: document.querySelector("audio"),
   finalScore: document.querySelector(".final"),
@@ -46,6 +48,7 @@ const GameView = {
     }.png'), auto`;
   },
   showGameOver: function () {
+
     this.pop.classList.remove("hidden");
     this.finalScore.innerText = GameModel.score;
     this.finalScore.style.color = GameModel.score < 100 ? "red" : "green";
@@ -136,13 +139,13 @@ const GameController = {
           tile.innerHTML = "";
           GameView.playSound("./audio/out.mp3", 0.2);
         }
-      }, Math.max(2000 - (GameModel.level * 100)));
+      }, Math.max(2000 - (GameModel.level * 100)), 800);
     }
   },
   startGameLoops: function () {
     setInterval(() => this.spawnEntity("enemy"), 1000 - (GameModel.level * 100));
-    setInterval(() => this.spawnEntity("player"), 1600 - (GameModel.level * 100));
-    setInterval(() => this.spawnEntity("enemy"), Math.max(2000 - (GameModel.level * 100)));
+    setInterval(() => this.spawnEntity("enemy"), 1600 - (GameModel.level * 100));
+    setInterval(() => this.spawnEntity("player"), Math.max(2000 - (GameModel.level * 100), 800));
   },
 };
 
